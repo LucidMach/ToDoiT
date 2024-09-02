@@ -1,4 +1,6 @@
+import { categoriesAtom } from "@/atoms/config";
 import category from "@/types/categories";
+import { useAtom } from "jotai";
 import { useState } from "react";
 import {
   Pressable,
@@ -14,6 +16,7 @@ interface props {
 
 const GlassTwoInButton: React.FC<props> = ({ item, onPress }) => {
   const { width, height } = Dimensions.get("window");
+  const [categoryList, setCategoryList] = useAtom(categoriesAtom);
   const [x, setX] = useState(0);
 
   return (
@@ -34,6 +37,21 @@ const GlassTwoInButton: React.FC<props> = ({ item, onPress }) => {
           height: x,
           width: x,
         },
+      }}
+      onLongPress={() => {
+        const list = categoryList;
+        const newList: category[] = [];
+        // so loops over old list, if curr index is not "to be deleted index" adds item to a new list while indexing it according to the new list
+        list.forEach((element, idx) => {
+          if (element.idx < item.idx || element.idx > item.idx)
+            newList.push({
+              icon: element.icon,
+              idx: newList.length,
+              name: element.name,
+            });
+        });
+        setCategoryList(newList);
+        console.log(newList);
       }}
       onPressIn={() => setX(8)}
       onPressOut={(e) => {

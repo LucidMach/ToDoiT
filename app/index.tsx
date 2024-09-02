@@ -1,11 +1,19 @@
 import GlassInButton from "@/components/GlassInButton";
 import GlassInTwoButton from "@/components/GlassInTwoButton";
-import { FlatList, SafeAreaView, View, Text } from "react-native";
-import category from "@/types/categories";
-import { useState } from "react";
+import { FlatList, SafeAreaView } from "react-native";
+import { categoriesAtom } from "@/atoms/config";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
+import { saveData } from "@/utils/storage";
 
 export default function Home() {
-  const [categoryList, setCategoryList] = useState<category[]>([]);
+  const [categoryList, setCategoryList] = useAtom(categoriesAtom);
+
+  useEffect(() => {
+    saveData("categories", categoryList);
+    console.log("updated local store");
+  }, [categoryList]);
+
   return (
     <SafeAreaView
       style={{
@@ -26,6 +34,7 @@ export default function Home() {
             {
               name: "Study",
               icon: "📚",
+              idx: categoryList.length,
             },
           ])
         }
