@@ -1,10 +1,11 @@
 import GlassInButton from "@/components/GlassInButton";
 import GlassInTwoButton from "@/components/GlassInTwoButton";
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, SafeAreaView, Text } from "react-native";
 import { categoriesAtom } from "@/atoms/config";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { saveData } from "@/utils/storage";
+import { router } from "expo-router";
 
 export default function Home() {
   const [categoryList, setCategoryList] = useAtom(categoriesAtom);
@@ -27,18 +28,7 @@ export default function Home() {
         data={categoryList}
         renderItem={({ item }) => <GlassInTwoButton item={item} />}
       />
-      <GlassInButton
-        onPress={(e) =>
-          setCategoryList([
-            ...categoryList,
-            {
-              name: "Study",
-              icon: "📚",
-              idx: categoryList.length,
-            },
-          ])
-        }
-      />
+      <GlassInButton onPress={() => router.push("/createCategory")} />
     </SafeAreaView>
   );
 }

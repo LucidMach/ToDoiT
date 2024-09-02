@@ -29,6 +29,7 @@ const RootLayout: React.FC = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="createCategory" options={{ headerShown: false }} />
     </Stack>
   );
 };
