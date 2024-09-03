@@ -1,30 +1,30 @@
+import { categoriesAtom, todoAtom } from "@/atoms/config";
 import GlassInButton from "@/components/GlassInButton";
-import GlassInTwoButton from "@/components/GlassInTwoButton";
 import Task from "@/components/Task";
 import todo from "@/types/todo";
-import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  SafeAreaView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { fetchData, saveData } from "@/utils/storage";
+import { SplashScreen, useLocalSearchParams } from "expo-router";
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
+import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
 
 const ToDos: React.FC = () => {
+  const [categoryList, setCategoryList] = useAtom(categoriesAtom);
+
   const { category } = useLocalSearchParams();
+  const catID = categoryList.findIndex((catItem) => catItem.name === category);
+
+  const [taskList, setTaskList] = useState(
+    categoryList[catID].todos ? categoryList[catID].todos : []
+  );
+
+  // useEffect(() => {
+  //   saveData(categoryName, taskList);
+  //   console.log("updated local store");
+  // }, [taskList]);
 
   const [taskName, setTaskName] = useState("");
-  const [taskList, setTaskList] = useState<todo[]>([
-    {
-      task: "complete building todoist functionality",
-      completed: false,
-      idx: 0,
-    },
-    { task: "set up expo", completed: true, idx: 1 },
-  ]);
+
   const [open, setOpen] = useState(true);
 
   const toggleTasks = (item: todo) => {
@@ -34,7 +34,7 @@ const ToDos: React.FC = () => {
       }
       return element;
     });
-    setTaskList(updatedList);
+    setTaskList([...updatedList]);
   };
 
   return (
@@ -72,6 +72,7 @@ const ToDos: React.FC = () => {
           value={taskName}
           onChangeText={(newText) => setTaskName(newText)}
           style={{
+            fontSize: 16,
             width: "90%",
             borderWidth: 1,
             borderRadius: 32,

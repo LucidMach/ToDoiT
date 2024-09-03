@@ -3,7 +3,7 @@ import GlassInTwoButton from "@/components/GlassInTwoButton";
 import { FlatList, SafeAreaView, Text } from "react-native";
 import { categoriesAtom } from "@/atoms/config";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { saveData } from "@/utils/storage";
 import { router } from "expo-router";
 import category from "@/types/categories";
@@ -41,6 +41,7 @@ export default function Home() {
                     icon: element.icon,
                     idx: newList.length,
                     name: element.name,
+                    todos: element.todos,
                   });
               });
               setCategoryList(newList);
