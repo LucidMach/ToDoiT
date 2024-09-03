@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { saveData } from "@/utils/storage";
 import { router } from "expo-router";
+import category from "@/types/categories";
 
 export default function Home() {
   const [categoryList, setCategoryList] = useAtom(categoriesAtom);
@@ -26,7 +27,26 @@ export default function Home() {
     >
       <FlatList
         data={categoryList}
-        renderItem={({ item }) => <GlassInTwoButton item={item} />}
+        renderItem={({ item }) => (
+          <GlassInTwoButton
+            item={item}
+            onPress={() => router.push(`/${item.name}`)}
+            onLongPress={() => {
+              const list = categoryList;
+              const newList: category[] = [];
+              // so loops over old list, if curr index is not "to be deleted index" adds item to a new list while indexing it according to the new list
+              list.forEach((element, idx) => {
+                if (element.idx < item.idx || element.idx > item.idx)
+                  newList.push({
+                    icon: element.icon,
+                    idx: newList.length,
+                    name: element.name,
+                  });
+              });
+              setCategoryList(newList);
+            }}
+          />
+        )}
       />
       <GlassInButton onPress={() => router.push("/createCategory")} />
     </SafeAreaView>
