@@ -2,8 +2,8 @@ import { categoriesAtom, todoAtom } from "@/atoms/config";
 import GlassInButton from "@/components/GlassInButton";
 import Task from "@/components/Task";
 import todo from "@/types/todo";
-import { fetchData, saveData } from "@/utils/storage";
-import { SplashScreen, useLocalSearchParams } from "expo-router";
+import { saveData } from "@/utils/storage";
+import { useLocalSearchParams } from "expo-router";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
@@ -18,13 +18,14 @@ const ToDos: React.FC = () => {
     categoryList[catID].todos ? categoryList[catID].todos : []
   );
 
-  // useEffect(() => {
-  //   saveData(categoryName, taskList);
-  //   console.log("updated local store");
-  // }, [taskList]);
+  useEffect(() => {
+    const updatedCategoryList = categoryList;
+    updatedCategoryList[catID].todos = taskList;
+    saveData("categories", updatedCategoryList);
+    console.log("updated local store");
+  }, [taskList]);
 
   const [taskName, setTaskName] = useState("");
-
   const [open, setOpen] = useState(true);
 
   const toggleTasks = (item: todo) => {
